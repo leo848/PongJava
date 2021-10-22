@@ -11,12 +11,15 @@ import static java.awt.event.KeyEvent.*;
 public class PongCanvas extends JPanel implements KeyListener {
 	final Vector size;
 	final HashMap<Integer, Boolean> keysDown = new HashMap<>();
+	private final GameLoop gameLoop;
 	Ball ball;
 	ArrayList<Slider> sliders = new ArrayList<>();
 	
 	public PongCanvas(GameLoop gameLoop, Vector size) {
 		setPreferredSize(new Dimension((int) size.x, (int) size.y));
 		this.size = size;
+		this.gameLoop = gameLoop;
+		
 		
 		ball = new Ball(gameLoop, 250, 250);
 		
@@ -33,11 +36,20 @@ public class PongCanvas extends JPanel implements KeyListener {
 		g2D.setColor(new Color(0x0));
 		g2D.fillRect(0, 0, (int) size.x, (int) size.y);
 		
+		if (ball.checkForGameOver(sliders)){
+			g2D.setColor(new Color(0xffffff));
+			g2D.drawString("Game over keine ahnung wer gewonen hat", 100, 100);
+			// gameLoop.stop();
+			
+			g2D.setColor(new Color(0xf));
+		}
+		
+		
 		ball.update(sliders);
 		sliders.forEach(Slider::update);
 		
-		sliders.get(0).updateKeys(keysDown, VK_W, VK_S);
-		sliders.get(1).updateKeys(keysDown, VK_UP, VK_DOWN);
+		sliders.get(0).updateKeys(keysDown, VK_W, VK_S, ball.speed/3);
+		sliders.get(1).updateKeys(keysDown, VK_UP, VK_DOWN, ball.speed/3);
 		
 		ball.show(g2D);
 		sliders.forEach(b -> b.show(g2D));

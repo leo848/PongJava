@@ -29,12 +29,14 @@ public class Slider {
 		pos.add(vel);
 	}
 	
-	public void updateKeys(HashMap<Integer, Boolean> keysDown, int keyUp, int keyDown) {
+	public void updateKeys(HashMap<Integer, Boolean> keysDown, int keyUp, int keyDown, float speed) {
+		speed += 0x1.5555_56p-1f;
+		
 		if (keysDown.get(keyUp) != null && keysDown.get(keyUp)) {
-			vel.add(0, -.1f);
+			vel.add(0, -.1f*(speed+.66f));
 		}
 		if (keysDown.get(keyDown) != null && keysDown.get(keyDown)) {
-			vel.add(0, .1f);
+			vel.add(0, .1f*(speed+.66f));
 		}
 	}
 }
